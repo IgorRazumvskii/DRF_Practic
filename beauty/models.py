@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class CustomUser(AbstractUser):
+class CustomUser(models.Model):
     fam = models.CharField(max_length=40)
     name = models.CharField(max_length=40)
     otc = models.CharField(max_length=40)
@@ -35,7 +35,7 @@ class Beauty(models.Model):
         ('RE', 'rejected'),
     )
 
-    status = models.CharField(max_length=30, choices=CHOICES, default=CHOICES[0][1])
+    status = models.CharField(max_length=30, choices=CHOICES, default=CHOICES[0][0])
 
     beauty_title = models.CharField(max_length=20)
     title = models.CharField(max_length=30)

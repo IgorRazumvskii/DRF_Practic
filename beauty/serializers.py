@@ -46,26 +46,26 @@ class UserSerializer(serializers.ModelSerializer):
 class BeautySerializer(serializers.ModelSerializer):
     coords = CoordsSerializer()
     level = LevelSerializer()
-    #user = UserSerializer()
+    user = UserSerializer()
     images = ImagesSerializer(write_only=True, many=True)
 
     class Meta:
         model = Beauty
-        # fields = '__all__'
-        exclude = ('user', )
+        fields = '__all__'
+        #  exclude = ('user', )
 
     def create(self, validated_data):
-        print(validated_data)
         coords = validated_data.pop('coords')  # берем координаты
         create_coords = Coords.objects.create(**coords)  # создаем координаты
         level = validated_data.pop('level')  # берем уровень
         create_level = Level.objects.create(**level)  # создаем координаты
-        #user = validated_data.pop('user')
-        #create_user = CustomUser.objects.get_or_create(**user)
+        u = validated_data.pop('user')
+        create_user = CustomUser.objects.get_or_create(**u)
         images = validated_data.pop('images')
         images_list = []
         for image in images:
             image = Images.objects.create(**image)
+
             images_list.append(image)
 
         print(image)
@@ -73,21 +73,49 @@ class BeautySerializer(serializers.ModelSerializer):
         title = validated_data.pop('title')
         other_titles = validated_data.pop('other_titles')
         connect = validated_data.pop('connect')
-        customuser = CustomUser.objects.first()
         create_beauty = Beauty.objects.create(beauty_title=beauty_title,
                                               title=title,
                                               other_titles=other_titles,
                                               connect=connect,
                                               level=create_level,
                                               coords=create_coords,
-                                              user=customuser,
-                                              )  # создаем экземпляр модели
+                                              user=create_user[0],
+                                              )
         create_beauty.images.add(*images_list)
         create_beauty.save()
         return create_beauty
 
+
+class BeautyGetSerializer(serializers.ModelSerializer):
+    coords = CoordsSerializer()
+    level = LevelSerializer()
+    user = UserSerializer(read_only=True)
+    images = ImagesSerializer(write_only=True, many=True)
+
+    class Meta:
+        model = Beauty
+        fields = "__all__"
+
     def update(self, instance, validated_data):
-        instance.coords = validated_data.get('coords', instance.coords)
-        instance.level = validated_data.get('level', instance.level)
-        instance.image = validated_data.get('images', instance.level)
+        instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
+        instance.title = validated_data.get('title', instance.title)
+        instance.other_titles = validated_data.get('other_titles', instance.other_titles)
+        instance.connect = validated_data.get('connect', instance.connect)
+
+        instance.coords.latitude = validated_data['coords']['latitude']
+        instance.coords.longitude = validated_data['coords']['longitude']
+        instance.coords.height = validated_data['coords']['height']
+
+        instance.level.winter = validated_data['level']['winter']
+        instance.level.summer = validated_data['level']['summer']
+        instance.level.autumn = validated_data['level']['autumn']
+        instance.level.spring = validated_data['level']['spring']
+
+        images = validated_data.pop('images')
+        images_list = []
+        for image in images:
+            image = Images.objects.create(**image)
+            images_list.append(image)
+
+        instance.images.set(images_list)
         return instance

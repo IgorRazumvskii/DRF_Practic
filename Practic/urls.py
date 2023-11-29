@@ -26,6 +26,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/v1/beauty', BeautyView.as_view(), name='beauty_list'),
     path('api/v1/beauty_create', BeautyCreate.as_view()),
+    path('api/v1/submitData/<int:pk>/', Beauty.as_view()),
 ]
 
 if settings.DEBUG:
