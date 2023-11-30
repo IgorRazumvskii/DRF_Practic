@@ -7,6 +7,7 @@ class CustomUser(models.Model):
     name = models.CharField(max_length=40)
     otc = models.CharField(max_length=40)
     phone = models.CharField(max_length=11)
+    email = models.EmailField(blank=True, unique=True)
 
 
 class Coords(models.Model):

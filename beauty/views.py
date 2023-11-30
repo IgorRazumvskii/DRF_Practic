@@ -2,13 +2,23 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
 
-from .models import Beauty, CustomUser
-from .serializers import BeautySerializer, BeautyGetSerializer
+from .models import Beauty
+from .serializers import BeautySerializer, BeautyGetSerializer, MailSerializer
 
 
 class BeautyView(generics.ListAPIView):
     queryset = Beauty.objects.all()
     serializer_class = BeautySerializer
+
+
+class Mail(generics.ListAPIView):
+    queryset = Beauty.objects.all()
+    #  lookup_field = 'user__email'
+    serializer_class = MailSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(user__email=self.kwargs['email'])
 
 
 class BeautyCreate(generics.CreateAPIView):
@@ -46,8 +56,4 @@ class Beauty(generics.RetrieveUpdateAPIView):
         else:
             return Response({'state': 0,
                       'message': 'Status not new'})
-
-
-class Mail():
-    lookup_field = 'user__email'
 

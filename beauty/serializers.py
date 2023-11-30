@@ -119,3 +119,14 @@ class BeautyGetSerializer(serializers.ModelSerializer):
 
         instance.images.set(images_list)
         return instance
+
+
+class MailSerializer(serializers.ModelSerializer):
+    coords = CoordsSerializer()
+    level = LevelSerializer()
+    user = UserSerializer()
+    images = ImagesSerializer(write_only=True, many=True)
+
+    class Meta:
+        model = Beauty
+        fields = '__all__'
