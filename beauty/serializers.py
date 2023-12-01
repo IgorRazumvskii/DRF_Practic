@@ -12,7 +12,7 @@ class Base64Field(serializers.Field):
     def to_internal_value(self, data):
         try:
             # Convert base64 string to bytes
-            return ContentFile(base64.b64decode(data.encode('utf-8')))
+            return ContentFile(base64.b64decode(data.encode('utf-8')), name='image.jpg')
         except Exception as e:
             raise serializers.ValidationError('Invalid base64 encoding')
 
@@ -68,7 +68,7 @@ class BeautySerializer(serializers.ModelSerializer):
 
             images_list.append(image)
 
-        print(image)
+        print()
         beauty_title = validated_data.pop('beauty_title')
         title = validated_data.pop('title')
         other_titles = validated_data.pop('other_titles')

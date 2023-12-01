@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'beauty.apps.BeautyConfig',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

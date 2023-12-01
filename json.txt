@@ -10,8 +10,7 @@
    "fam": "Пупкин",
    "name": "Василий",
    "otc": "Иванович",
-   "phone": "+75555555",
-   "email": "test@mail.com"},
+   "phone": "+75555555"},
 
   "coords":{
   "latitude": "45.3842",

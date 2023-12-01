@@ -18,7 +18,8 @@ class Mail(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(user__email=self.kwargs['email'])
+        print(self.request.GET)
+        return queryset.filter(user__email=self.request.data['user__email'])
 
 
 class BeautyCreate(generics.CreateAPIView):
@@ -37,7 +38,7 @@ class BeautyCreate(generics.CreateAPIView):
         return
 
 
-class Beauty(generics.RetrieveUpdateAPIView):
+class BeautyUpdate(generics.RetrieveUpdateAPIView):
     queryset = Beauty.objects.all()
     serializer_class = BeautyGetSerializer
     http_method_names = ['get', 'patch']
